@@ -8,7 +8,7 @@ const socket = dgram.createSocket('udp4');
 const moment = require('moment');
 const UDP_PORT = 9904;
 const TCP_PORT = 2205;
-const MULTICAST = 239.255.22.5;
+const MULTICAST = "239.255.22.5";
 const WAITING_TIME = 5;
 const INSTRUMENTS = new Map();
 INSTRUMENTS.set('ti-ta-ti','piano');
@@ -26,7 +26,7 @@ var musicians = new Map();
 function Musician(id, instrument, date) {
     this.uuid = id;
     this.instrument = instrument;
-    this.lastActivity = date;
+    this.activeSince = date;
 }
 
 function validSound(sound) {
@@ -35,7 +35,7 @@ function validSound(sound) {
     }
     else{
         console.log("The sound is invalid");
-        process.exit(0);
+        process.exit(1);
     }
     return INSTRUMENTS.get(sound);
 }
@@ -63,12 +63,12 @@ socket.on('message', function (msg) {
  const server = net.createServer(function (socket) {
     var musiciansReceived = [];
     musicians.forEach((musician) => {
-        if (moment(Date.now()).diff(musician.lastActivity, 'seconds') <= WAITING_TIME)
+        if (moment().diff(musician.activeSince, 'seconds') <= WAITING_TIME)
             musiciansReceived.push(musician);
         else
             musicians.delete(musician);
     });
-    socket.write(musiciansReceived);
+    socket.write(JSON.stringify(musiciansReceived));
     socket.end();
  });
 

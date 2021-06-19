@@ -1,0 +1,10 @@
+{
+  "name": "musician",
+  "author": "Blanc Jean-Luc",
+  "version": "1.0.0",
+  "description": "A musician playing an instrument and making sounds with it through UDP",
+  "main": "musician.js",
+  "dependencies": {
+    "uuid": "^8.3.2"
+  }
+}
